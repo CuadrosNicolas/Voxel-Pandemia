@@ -1,5 +1,5 @@
-
 import math
+import json
 """
 COMPUTATION FUNCTIONS
 
@@ -78,7 +78,7 @@ def getProgression(x,y,z, size):
             break
     return addedPerDay
 
-def getTranslation(size):
+def getTranslation(size_base):
     """
     Depending on the initial size of the cube
     Yield all possible distinct translation.
@@ -86,10 +86,15 @@ def getTranslation(size):
     Each distinct translation yield a distinct contamination sequence.
 
     """
-    for i in range(0,size+1):
-        for j in range(0,i+1):
-            for k in range(0,j+1):
-                yield [i,j,k]
+    #Avoid extreme cases with only one possiblity
+    if(size_base<=2):
+        yield [0,0,0]
+    else:
+        size = int(math.ceil(size_base/2))
+        for i in range(0,size+1):
+            for j in range(0,i+1):
+                for k in range(0,j+1):
+                    yield [i,j,k]
 
 def fancyPrint(sequence, translations,size):
     print("Sequence : "+str(sequence))
@@ -112,10 +117,14 @@ def fancyPrint(sequence, translations,size):
     print("")
 
 def main():
-    size = 5 # <------- Change the cube size here
+    config = None
+    with open('config.json') as json_file:
+        config = json.load(json_file)
+    size = config["cubeSize"]
+
     sequences = [] 
     translations = []
-    for [pX,pY,pZ] in getTranslation(int(math.ceil(size/2))):
+    for [pX,pY,pZ] in getTranslation(size):
         addedPerDay = getProgression(pX,pY,pZ,size)
         sequences.append(addedPerDay)
         translations.append([pX,pY,pZ])
