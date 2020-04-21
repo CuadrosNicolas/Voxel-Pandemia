@@ -38,7 +38,7 @@ def getTranslation(size_base):
         yield [0,0,0]
     else:
         size = int(math.ceil(size_base/2))
-        for i in range(0,size+1):
+        for i in range(0,size):
             for j in range(0,i+1):
                 for k in range(0,j+1):
                     yield [i,j,k]
@@ -88,6 +88,6 @@ def main():
                 sequences[-1].pop()
     for i in range(len(sequences)):
         fancyPrint(sequences[i],translations[i],size)
-        
+    print("Total groups : "+str(len(sequences)))
 if __name__ == "__main__": 
     main() 

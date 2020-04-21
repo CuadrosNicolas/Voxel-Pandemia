@@ -53,6 +53,16 @@ PROBLEM SOLUTION PART
 """
 
 def compute3d(xStart, yStart, zStart, day, size):
+    #Convert position into their symetrical version
+    #in order to be compatible with the algorithm
+    middle = int(math.ceil(size/2))
+    if(xStart>middle):
+        xStart = xStart - middle
+    if(yStart>middle):
+        yStart =  yStart- middle 
+    if(zStart>middle):
+        zStart = zStart - middle 
+
     """
     Return how many cases appear during a specific day
     """
@@ -99,7 +109,7 @@ def getTranslation(size_base):
         yield [0,0,0]
     else:
         size = int(math.ceil(size_base/2))
-        for i in range(0,size+1):
+        for i in range(0,size):
             for j in range(0,i+1):
                 for k in range(0,j+1):
                     yield [i,j,k]
@@ -129,18 +139,16 @@ def main():
     with open('config.json') as json_file:
         config = json.load(json_file)
     size = config["cubeSize"]
-
+    
     sequences = [] 
     translations = []
     for [pX,pY,pZ] in getTranslation(size):
         addedPerDay = getProgression(pX,pY,pZ,size)
         sequences.append(addedPerDay)
         translations.append([pX,pY,pZ])
-        break
     for i in range(len(sequences)):
         fancyPrint(sequences[i],translations[i],size)
     print("Total groups : "+str(len(sequences)))
     
-
 if __name__ == "__main__":
     main()
