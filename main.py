@@ -22,22 +22,26 @@ def suit(x,day,size):
     else:
         return 1
 
-def suit2d(ySource, x,y,day,size):
-    return suit(x,day-abs(ySource-y), size)
+def suit2d(yStart, xStart,y,day,size):
+    return suit(xStart,day-abs(yStart-y), size)
+
 
 def suit3d(zSource,ySource,xStart,z,day,size):
     sliceDay = day-abs(zSource-z)
     out = 0
     maxDay = (size - ySource) + (size -xStart)
+    lineMaxDay = size - xStart
+    lenghtY = (size - ySource)
 
-    minBottom = ySource
-    if(sliceDay>=maxDay):
-        minBottom = ySource + (maxDay-sliceDay)
 
-    for i in range(minBottom,size):
+
+    _max = int(sliceDay if sliceDay <= lenghtY else lenghtY)
+    _min = int(0 if sliceDay <= lenghtY else sliceDay - lenghtY)
+
+    for i in range(ySource + _min,ySource+_max):
         out += suit2d(ySource, xStart,i, day-abs(zSource-z), size)
-
-    for i in range(0,minBottom):
+    _min = _min if _min <= ySource else ySource
+    for i in range(0,ySource):
         out += suit2d(ySource, xStart, i, day-abs(zSource-z), size)
 
     return out
@@ -51,15 +55,17 @@ def compute3d(xStart, yStart, zStart, day, size):
     Return how many cases appear during a specific day
     """
     out = 0
-    maxDay = (size - yStart) + (size -xStart) + (size - zStart)
-    minBottom = zStart
-    if(day>=maxDay):
-        minBottom = zStart + (maxDay-day)
 
-    for i in range(minBottom,size):
+    lenghtZ = (size - zStart)# + (size -xStart)
+    maxDay = (size - zStart) + (size -xStart)
+    _max = int(day if day <= lenghtZ else lenghtZ)
+    _min = int(0 if day <= maxDay else day - maxDay)
+
+    for i in range(zStart+_min,zStart + _max):
         out += suit3d(zStart, yStart,xStart, i, day, size)
 
-    for i in range(0,minBottom):
+    _min = _min if _min <= zStart else zStart
+    for i in range(0,zStart - _min):
         out += suit3d(zStart, yStart,xStart, i, day, size)
     return out
 
@@ -131,7 +137,7 @@ def main():
     for i in range(len(sequences)):
         fancyPrint(sequences[i],translations[i],size)
     print("Total groups : "+str(len(sequences)))
-
+    
 
 if __name__ == "__main__":
     main()
