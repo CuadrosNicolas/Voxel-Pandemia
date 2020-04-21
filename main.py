@@ -1,5 +1,7 @@
 import math
 import json
+
+
 """
 COMPUTATION FUNCTIONS
 
@@ -134,6 +136,7 @@ def main():
         addedPerDay = getProgression(pX,pY,pZ,size)
         sequences.append(addedPerDay)
         translations.append([pX,pY,pZ])
+        break
     for i in range(len(sequences)):
         fancyPrint(sequences[i],translations[i],size)
     print("Total groups : "+str(len(sequences)))

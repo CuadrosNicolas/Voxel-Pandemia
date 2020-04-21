@@ -55,7 +55,17 @@ cd Voxel-Pandemia
 Ensuite vous pouvez simplement lancer le programme avec la commande suivante :
 
 ````bash
-python main.py
+python3 main.py
 ````
 
 Le programme affichera finalement dans la console des tableaux correspondant aux différentes possibilités du virus en fonction de la position de départ. La taille du cube choisi pour la simulation de base est 5, celle-ci peut être changée par le biais du fichier "config.json".
+
+## Benchmark
+
+Ce repo possède le script "benchmark.py" afin de comparer les performances entre une implémentation classique décrite au départ (avec l'utilisation d'état précédant) et la version actuelle. le benchmark nécessite d'être sous UNIX et d'avoir la librarie numpy d'installer. Une fois cela vérifié, vous pouvez lancer le benchmark avec la commande suivante :
+
+````bash
+python3 benchmark.py
+````
+
+exec_base correspond à l'implémentation classique et exec_main à la version actuelle.
