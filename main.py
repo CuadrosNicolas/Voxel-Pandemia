@@ -16,118 +16,142 @@ Some optimizations are made to avoid line/slice who are already totally infected
 
 
 def suit(x, day, size):
+    """
+    Compute the number of infected during a specific day on a line
+    with a starting offset
+    :param x: starting offset
+    :param day: day to compute
+    :param size: lenght of the line
+    """
+    # Number of day requiered to infect all the line
     nDay = size-x
+    # Negative, 0 day or above the nDay return 0 new cases
     if(day > nDay or day <= 0):
         return 0
+    # On day 1 only 1 infected appear
     elif(day == 1):
         return 1
+    # If it has not reach one end of the line
+    # 2 cases appears
     elif day-1 <= x:
         return 2
+    # Else only one case can appear
     else:
         return 1
 
 
-def suit2d(yStart, xStart, y, day, size):
-    return suit(xStart, day-abs(yStart-y), size)
-
-
-# Some memoization function
+# Some memoization functions
 mem = {}
 
 
-def sliceMem(x, y, day, val):
-    if(not(x in mem.keys())):
-        mem[x] = {}
-    if(not(y in mem[x].keys())):
-        mem[x][y] = {}
-    if(not(day in mem[x][y].keys())):
-        mem[x][y][day] = val
+def sliceMem(day, val):
+    mem[day] = val
 
 
-def getSliceMem(x, y, day):
+def getSliceMem(day):
     try:
-        return mem[x][y][day]
+        return mem[day]
     except:
         return None
 
 
 def resetSliceMem():
+    global mem
     mem = {}
 
 
-def suit3d(zSource, ySource, xStart, z, day, size):
-    sliceDay = day-abs(zSource-z)
-
-    # Get the memoize value if ones exist
-    memTmp = getSliceMem(xStart, ySource, sliceDay)
+def suit2d(yStart, xStart, day, size):
+    """
+    Compute the number of infected during a specific day on a grid
+    with a starting offset
+    :param xStart: x starting offset
+    :param yStart: y starting offset
+    :param day: day to compute
+    :param size: size of the grid
+    """
+    # Verify if has not already been compute.
+    memTmp = getSliceMem(day)
     if(memTmp != None):
         return memTmp
 
     out = 0
-    maxDay = (size - ySource) + (size - xStart)
-    lineMaxDay = size - xStart
-    lenghtY = (size - ySource)
+    maxDay = (size - yStart)
 
-    _max = int(sliceDay if sliceDay <= lenghtY else lenghtY)
-    _min = int(0 if sliceDay <= lenghtY else sliceDay - lenghtY)
+    _max = int(day if day <= maxDay else maxDay)
+    _min = int(0 if day <= maxDay else day - maxDay)
+    for i in range(yStart + _min, yStart+_max):
+        localLineDay = day-abs(yStart-i)
+        out += suit(xStart, localLineDay, size)
+    _max = day if day <= yStart else yStart
+    _min = int(0 if day <= maxDay else day - maxDay - 1)
+    for i in range(yStart - _max, yStart - _min):
+        localLineDay = day-abs(yStart-i)
+        out += suit(xStart, localLineDay, size)
 
-    for i in range(ySource + _min, ySource+_max):
-        out += suit2d(ySource, xStart, i, day-abs(zSource-z), size)
+    sliceMem(day, out)
 
-    _max = sliceDay if sliceDay <= ySource else ySource
-    _min = int(0 if sliceDay <= lenghtY else sliceDay - lenghtY - 1)
-    for i in range(ySource - _max, ySource - _min):
-        out += suit2d(ySource, xStart, i, day-abs(zSource-z), size)
-
-    sliceMem(xStart, ySource, day, out)
     return out
 
 
-"""
-PROBLEM SOLUTION PART
-"""
-
-
-def compute3d(xStart, yStart, zStart, day, size):
-    # Convert position into their symetrical version
-    # in order to be compatible with the algorithm
-    middle = int(math.ceil(size/2))
-    if(xStart > middle):
-        xStart = xStart - middle
-    if(yStart > middle):
-        yStart = yStart - middle
-    if(zStart > middle):
-        zStart = zStart - middle
-
+def suit3d(zStart, yStart, xStart, day, size):
     """
-    Return how many cases appear during a specific day
+    Compute the number of infected during a specific day in a cube
+    with a starting offset
+    :param xStart: x starting offset
+    :param yStart: y starting offset
+    :param zStart: z starting offset
+    :param day: day to compute
+    :param size: size of the grid
     """
     out = 0
 
     lenghtZ = (size - zStart)
-    maxDay = (size - zStart) + (size - xStart)
-    _max = int(day if day <= lenghtZ else lenghtZ)
-    _min = int(0 if day <= maxDay else day - maxDay)
+    # Max day for a slice
+    maxDay = (size - yStart) + (size - xStart)
 
+    _max = int(day if day < lenghtZ else lenghtZ)
+    _min = int(0 if day < maxDay else day - maxDay)
     for i in range(zStart+_min, zStart + _max):
-        out += suit3d(zStart, yStart, xStart, i, day, size)
+        localSliceDay = day-abs(zStart-i)
+        out += suit2d(yStart, xStart, localSliceDay, size)
 
-    _min = _min if _min <= zStart else zStart
-    _max = int(day if day <= zStart else zStart)
-    for i in range(zStart - _max, zStart - _min):
-        out += suit3d(zStart, yStart, xStart, i, day, size)
+    _max = _min if _min < zStart else zStart
+    _min = int(day if day < zStart else zStart)
+    for i in range(zStart - _min, zStart - _max):
+        localSliceDay = day-abs(zStart-i)
+        out += suit2d(yStart, xStart, localSliceDay, size)
+
     return out
+
+
+def symetricalCoordinates(xStart, yStart, zStart, size):
+    # Convert position into their symetrical version
+    # in order to be compatible with the algorithm
+    middle = int(math.ceil(size/2))
+    TmpMiddle = middle
+    if(size % 2 == 0):
+        middle += 1
+    if(xStart >= middle):
+        xStart = xStart - middle
+    if(yStart >= middle):
+        yStart = yStart - middle
+    if(zStart >= middle):
+        zStart = zStart - middle
+    return [xStart, yStart, zStart]
 
 
 def getProgression(x, y, z, size):
     """
     Return how the viruses progress depending on the first infected position
     """
+    # Empty the function cache
+    resetSliceMem()
     day = 1
-    addedPerDay = [compute3d(x, y, z, day, size)]
+    addedPerDay = [1]
+    [x, y, z] = symetricalCoordinates(x, y, z, size)
     while True:
         day += 1
-        tmp = compute3d(x, y, z, day, size)
+        tmp = suit3d(z, y, x, day, size)
         if(tmp > 0):
             addedPerDay.append(tmp)
         else:
@@ -184,14 +208,17 @@ def main():
     with open('config.json') as json_file:
         config = json.load(json_file)
     size = config["cubeSize"]
+    limitOne = config["limitOne"]
     sequences = []
     translations = []
+    data = []
     for [pX, pY, pZ] in getTranslation(size):
-        # Empty the function cache
-        resetSliceMem()
         addedPerDay = getProgression(pX, pY, pZ, size)
         sequences.append(addedPerDay)
         translations.append([pX, pY, pZ])
+        data.append([addedPerDay, [pX, pY, pZ]])
+        if(limitOne):
+            break
     for i in range(len(sequences)):
         fancyPrint(sequences[i], translations[i], size)
     print("Total groups : "+str(len(sequences)))

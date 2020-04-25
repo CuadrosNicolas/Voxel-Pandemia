@@ -58,7 +58,7 @@ Ensuite vous pouvez simplement lancer le programme avec la commande suivante :
 python3 main.py
 ````
 
-Le programme affichera finalement dans la console des tableaux correspondant aux différentes possibilités du virus en fonction de la position de départ. La taille du cube choisi pour la simulation de base est 5, celle-ci peut être changée par le biais du fichier "config.json".
+Le programme affichera finalement dans la console des tableaux correspondant aux différentes possibilités du virus en fonction de la position de départ. La taille du cube choisi pour la simulation de base est 5, celle-ci peut être changée par le biais du fichier "config.json". Le paramètre "limitOne" permet également de limiter le calcul à uniquement la première translaiton (0,0,0) correspondant au cas nécessitant le plus de temps pour infecter la totalité du cube.
 
 ## Benchmark
 

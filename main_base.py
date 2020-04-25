@@ -57,6 +57,7 @@ def main():
     with open('config.json') as json_file:
         config = json.load(json_file)
     size = config["cubeSize"]
+    limitOne = config["limitOne"]
 
     def validPlace(x, y, k):
         return x >= 0 and x < size and y >= 0 and y < size and k >= 0 and k < size
@@ -95,6 +96,8 @@ def main():
             testCases = np.copy(nextTestCases)
             if(not(len(testCases))):
                 sequences[-1].pop()
+        if(limitOne):
+            break
     for i in range(len(sequences)):
         fancyPrint(sequences[i], translations[i], size)
     print("Total groups : "+str(len(sequences)))

@@ -1,3 +1,4 @@
 {
-    "cubeSize": 10
+    "cubeSize": 5,
+    "limitOne": false
 }
