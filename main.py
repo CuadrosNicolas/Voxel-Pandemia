@@ -75,18 +75,19 @@ def suit2d(yStart, xStart, day, size):
         return memTmp
 
     out = 0
-    maxDay = (size - yStart)
+    maxDay = (size - yStart) 
 
-    _max = int(day if day <= maxDay else maxDay)
-    _min = int(0 if day <= maxDay else day - maxDay)
-    for i in range(yStart + _min, yStart+_max):
-        localLineDay = day-abs(yStart-i)
-        out += suit(xStart, localLineDay, size)
-    _max = day if day <= yStart else yStart
-    _min = int(0 if day <= maxDay else day - maxDay - 1)
-    for i in range(yStart - _max, yStart - _min):
-        localLineDay = day-abs(yStart-i)
-        out += suit(xStart, localLineDay, size)
+    if day <= maxDay:
+        out += suit(xStart, day, size)
+    _max = day if day <= maxDay else maxDay
+    _min = 1 if day - maxDay < 2 else day - maxDay 
+    for i in range(_min,_max):
+        localLineDay = day-abs(i)
+        tmp = suit(xStart,localLineDay, size)
+        if(yStart - i>=0):
+            tmp *= 2
+        out += tmp        
+
 
     sliceMem(day, out)
 
@@ -107,19 +108,21 @@ def suit3d(zStart, yStart, xStart, day, size):
 
     lenghtZ = (size - zStart)
     # Max day for a slice
-    maxDay = (size - yStart) + (size - xStart)
+    maxDay = (size - yStart) + (size - xStart) - 1
 
-    _max = int(day if day < lenghtZ else lenghtZ)
-    _min = int(0 if day < maxDay else day - maxDay)
-    for i in range(zStart+_min, zStart + _max):
-        localSliceDay = day-abs(zStart-i)
-        out += suit2d(yStart, xStart, localSliceDay, size)
+    if day <= maxDay:
+        out += suit2d(yStart, xStart, day, size)
+        
+    _max = day if day <= lenghtZ else lenghtZ
+    _min = 1 if day - maxDay < 2 else day - maxDay
+    for i in range(_min,_max):
+        localSliceDay = day-abs(i)
+        tmp = suit2d(yStart, xStart, localSliceDay, size)
+        if(zStart - i>=0):
+            tmp *= 2
+        out += tmp        
 
-    _max = _min if _min < zStart else zStart
-    _min = int(day if day < zStart else zStart)
-    for i in range(zStart - _min, zStart - _max):
-        localSliceDay = day-abs(zStart-i)
-        out += suit2d(yStart, xStart, localSliceDay, size)
+
 
     return out
 
