@@ -75,19 +75,18 @@ def suit2d(yStart, xStart, day, size):
         return memTmp
 
     out = 0
-    maxDay = (size - yStart) 
+    maxDay = (size - yStart)
 
     if day <= maxDay:
         out += suit(xStart, day, size)
     _max = day if day <= maxDay else maxDay
-    _min = 1 if day - maxDay < 2 else day - maxDay 
-    for i in range(_min,_max):
+    _min = 1 if day - maxDay < 2 else day - maxDay
+    for i in range(_min, _max):
         localLineDay = day-abs(i)
-        tmp = suit(xStart,localLineDay, size)
-        if(yStart - i>=0):
+        tmp = suit(xStart, localLineDay, size)
+        if(yStart - i >= 0):
             tmp *= 2
-        out += tmp        
-
+        out += tmp
 
     sliceMem(day, out)
 
@@ -112,17 +111,15 @@ def suit3d(zStart, yStart, xStart, day, size):
 
     if day <= maxDay:
         out += suit2d(yStart, xStart, day, size)
-        
+
     _max = day if day <= lenghtZ else lenghtZ
     _min = 1 if day - maxDay < 2 else day - maxDay
-    for i in range(_min,_max):
+    for i in range(_min, _max):
         localSliceDay = day-abs(i)
         tmp = suit2d(yStart, xStart, localSliceDay, size)
-        if(zStart - i>=0):
+        if(zStart - i >= 0):
             tmp *= 2
-        out += tmp        
-
-
+        out += tmp
 
     return out
 
