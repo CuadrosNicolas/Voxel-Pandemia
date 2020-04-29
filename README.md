@@ -72,7 +72,7 @@ exec_base correspond à l'implémentation classique et exec_main à la version a
 
 ## Implémentation en Go
 
-Une implémentation en Go de l'algorithme est également disponible sous le dossier golang/main. Une implémentation de la version basique est également disponible sous le dossier golang/base. Ces 2 programmes s'appuie sur le fichier de configuration golang/conf.json et pour fonctionner correctement doivent être lancé depuis le dossier golang.
+Une implémentation en Go de l'algorithme est également disponible sous le dossier golang/main. Une implémentation de la version basique est également disponible sous le dossier golang/base. Ces 2 programmes s'appuient sur le fichier de configuration golang/conf.json et pour fonctionner correctement doivent être lancés depuis le dossier golang.
 
 Par exemple si vous êtes dans le dossier du repository : 
 
@@ -83,4 +83,4 @@ go run main/main.go -v
 
 Le "-v" permet d'afficher les résultats et pas juste le temps écoulé. 
 
-Le benchmark utiliser pour l'implémentation en Python est également disponible. Comparé à aux version en Python, la version en Golang est bien plus rapide notamment grâce à l'utilisation des goroutines.
+Le benchmark utiliser pour l'implémentation en Python est également disponible. Comparé à la version en Python, la version en Golang est bien plus rapide notamment grâce à l'utilisation des goroutines.
