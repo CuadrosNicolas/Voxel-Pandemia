@@ -4,7 +4,7 @@
 
 Ce script python vise à résoudre le problème suivant :
 
-Considérons un cube de largeur N, composer lui-même de cube de largeur 1.
+Considérons un cube de largeur N, composé lui-même de cube de largeur 1.
 La Voxel Pandemia se traduit par la transformation à l'instant 0 d'un cube en un cube contaminé
 à une position initial x, y et z. Pour les t+1 suivants la contamination suit la règle suivante :
 
